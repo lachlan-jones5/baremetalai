@@ -7,7 +7,7 @@
 **Instructions**:
 1.  Run `git add .` to stage all new and modified files.
 2.  Analyze the staged changes by running `git diff --staged`.
-3.  Based on the analysis, generate a concise and descriptive commit message following the conventional commit format (e.g., `feat(runtime): Implement SRAM read/write logic`).
+3.  Based on the analysis, generate a concise and descriptive commit message following the conventional commit format (e.g., `feat(runtime): implement SRAM read/write logic`).
 4.  Execute the commit using the generated message: `git commit -m "..."`.
 
 #### @git/amend
