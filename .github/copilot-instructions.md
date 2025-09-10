@@ -29,6 +29,6 @@
     * The public interfaces of C++ header files.
     * TODO comments or issue markers in the code.
 2.  Based on this analysis, update the following sections of this document:
-    * `Directory Structure`: Ensure the ASCII tree is accurate.
+    * `Directory Structure`: Ensure the ASCII tree is accurate. If one does not exist, create one yourself.
     * Any other sections that have become outdated due to new architectural decisions or implemented code.
 
