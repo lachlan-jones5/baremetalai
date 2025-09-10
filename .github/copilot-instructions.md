@@ -14,7 +14,7 @@
 **Action**: Stages all uncommitted changes, adds them to the most recent commit, then updates the commit message based on the complete diff.
 **Instructions**:
 1.  Run `git add .` to stage all new and modified files.
-2.  Analyze the *entire diff* that will make up the amended commit by running `git diff --cached HEAD` (or `git show --staged` for the staged snapshot).
+2.  Analyze the *entire diff* that will make up the amended commit by running `git diff --cached HEAD` (or simply `git diff --cached` for the staged snapshot).
 3.  Based on this complete analysis, generate a new, comprehensive commit message. The previous commit message may provide useful context, but ensure the new message accurately reflects the current state of the commit.
 4.  Amend the most recent commit, updating both its contents and message, by running `git commit --amend -m "newly generated message"`.
 
