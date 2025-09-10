@@ -16,7 +16,7 @@
 1.  Run `git add .` to stage all new and modified files.
 2.  Run `git commit --amend --no-edit` to add the staged changes to the `HEAD` commit without opening an editor.
 3.  Analyze the *entire diff* of the now-amended `HEAD` commit by running `git show HEAD`.
-4.  Based on this complete analysis, generate a new, comprehensive commit message based on the complete diff, replacing the previous message. The previous commit message may provide useful context, but ensure the new message accurately reflects the current state of the commit.
+4.  Based on this complete analysis, generate a new, comprehensive commit message, replacing the previous message. The previous commit message may provide useful context, but ensure the new message accurately reflects the current state of the commit.
 5.  Overwrite the commit message of the amended commit by running `git commit --amend -m "newly generated message"`.
 
 ### Project Management
