@@ -33,4 +33,3 @@
     * `Directory Structure`: Ensure the ASCII tree is accurate.
     * Any other sections that have become outdated due to new architectural decisions or implemented code.
 
-## Directory Structure
