@@ -73,5 +73,5 @@ jobs:
             # This system prompt sets the context and persona for Claude's responses.
             --system-prompt "Act as a principal software engineer with extensive experience in the full stack of AI systems. Your expertise covers low-level, on-device workload optimizations (e.g., CUDA, MLIR, kernels) as well as high-level concepts like Kubernetes, networking, and distributed clusters. Provide expert analysis, architectural guidance, and precise, optimized code."
             # Set the maximum number of conversational turns.
-            --max-turns: 20
+            --max-turns 20
 
