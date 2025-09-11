@@ -50,6 +50,7 @@ jobs:
           assignee_trigger: 'claude-bot'
           claude_args: |
             --model claude-sonnet-4-20250514
+            --yes
             --allowedTools "Read,Write,Edit,Bash(git:*),mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*)"
             --system-prompt "Act as a principal software engineer with extensive experience in the full stack of AI systems. Your expertise covers low-level, on-device workload optimizations (e.g., CUDA, MLIR, kernels) as well as high-level concepts like Kubernetes, networking, and distributed clusters. Provide expert analysis, architectural guidance, and precise, optimized code."
             --max-turns 20
