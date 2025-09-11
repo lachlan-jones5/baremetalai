@@ -15,7 +15,7 @@
 **Instructions**:
 1.  Run `git add .` to stage all new and modified files.
 2.  Analyze the *entire diff* that will make up the amended commit by running `git diff HEAD~1`.
-3.  Based on this complete analysis, generate a new, comprehensive commit message. The previous commit message may provide useful context, but ensure the new message accurately reflects the current state of the commit.
+3.  Based on this complete analysis, generate a new, comprehensive commit message. The previous commit message must be ignored; the new message should be based solely on the current state of the commit.
 4.  Amend the most recent commit, updating both its contents and message, by running `git commit --amend -m "newly generated message"`.
 
 ### Project Management
