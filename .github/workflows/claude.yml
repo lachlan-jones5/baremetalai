@@ -42,9 +42,9 @@ jobs:
         id: set_prompt
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo "PROMPT_TEXT=As a principal engineer, review this PR. Focus on low-level performance optimizations for AI workloads, system-level integration, and potential impacts on scalability in a distributed environment like Kubernetes." >> $GITHUB_OUTPUT
+            echo "PROMPT_TEXT=As a principal engineer, review PR #${{ github.event.pull_request.number }} in ${{ github.repository }}. Focus on low-level performance optimizations for AI workloads, system-level integration, and potential impacts on scalability in a distributed environment like Kubernetes." >> $GITHUB_OUTPUT
           elif [[ "${{ github.event_name }}" == "issues" ]]; then
-            echo "PROMPT_TEXT=Please analyze this issue, propose a solution, and implement the fix. Create a new branch and open a pull request with the changes." >> $GITHUB_OUTPUT
+            echo "PROMPT_TEXT=Please analyze issue #${{ github.event.issue.number }} in ${{ github.repository }}, propose a solution, and implement the fix. Create a new branch and open a pull request with the changes." >> $GITHUB_OUTPUT
           else
             echo "PROMPT_TEXT=" >> $GITHUB_OUTPUT
           fi
