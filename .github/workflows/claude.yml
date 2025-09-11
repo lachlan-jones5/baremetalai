@@ -32,6 +32,10 @@ jobs:
     # including itself, to prevent infinite loops.
     if: github.event.sender.type != 'Bot'
     steps:
+      # This step checks out your repository's code so the action can access it.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       # This step sets the appropriate prompt based on whether the trigger was a PR or an issue.
       # For interactive comments, the prompt is taken from the comment body itself.
       - name: Set Automation Prompt
