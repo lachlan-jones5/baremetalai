@@ -1,12 +1,8 @@
 # This GitHub Actions workflow provides both automatic and interactive code assistance
-# using Anthropic's Claude model.
+# using Anthropic's Claude model, based on the latest best practices.
 
 name: 'Claude Assistant'
 
-# This workflow triggers on several events:
-# - New pull requests or new commits to existing PRs (for automatic reviews).
-# - New issues or when an issue is assigned (for automatic issue resolution).
-# - Comments on issues or pull requests (for interactive Q&A).
 on:
   pull_request:
     types: [opened, synchronize]
@@ -17,8 +13,6 @@ on:
   pull_request_review_comment:
     types: [created]
 
-# Grant necessary permissions for the action.
-# 'id-token: write' is required for the action to authenticate with GitHub.
 permissions:
   contents: write
   pull-requests: write
@@ -28,54 +22,38 @@ permissions:
 jobs:
   claude-assistant:
     runs-on: ubuntu-latest
-    # This condition ensures the action doesn't run on comments made by bots,
-    # including itself, to prevent infinite loops.
     if: github.event.sender.type != 'Bot'
     steps:
-      # This step checks out your repository's code so the action can access it.
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Fetch only the latest commit for efficiency, as recommended.
+          fetch-depth: 1
 
-      # This step sets the appropriate prompt based on whether the trigger was a PR or an issue.
-      # For interactive comments, the prompt is taken from the comment body itself.
-      - name: Set Automation Prompt
-        id: set_prompt
+      - name: Set Automation Prompt and Tools
+        id: set_context
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo "PROMPT_TEXT=As a principal engineer, review PR #${{ github.event.pull_request.number }} in ${{ github.repository }}. Focus on low-level performance optimizations for AI workloads, system-level integration, and potential impacts on scalability in a distributed environment like Kubernetes." >> $GITHUB_OUTPUT
+            echo "PROMPT_TEXT=REPO: ${{ github.repository }}\nPR NUMBER: ${{ github.event.pull_request.number }}\n\nAs a principal engineer, please provide a thorough review of this pull request. Use inline comments for specific code suggestions and a top-level comment for the overall summary." >> $GITHUB_OUTPUT
+            echo "ALLOWED_TOOLS=mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*)" >> $GITHUB_OUTPUT
           elif [[ "${{ github.event_name }}" == "issues" ]]; then
-            echo "PROMPT_TEXT=Please analyze issue #${{ github.event.issue.number }} in ${{ github.repository }}, propose a solution, and implement the fix. Create a new branch and open a pull request with the changes." >> $GITHUB_OUTPUT
+            echo "PROMPT_TEXT=REPO: ${{ github.repository }}\nISSUE NUMBER: ${{ github.event.issue.number }}\n\nPlease analyze this issue, propose a solution, and implement the fix. Create a new branch and open a pull request with the changes." >> $GITHUB_OUTPUT
+            echo "ALLOWED_TOOLS=Read,Write,Edit,Bash(git:*)" >> $GITHUB_OUTPUT
           else
             echo "PROMPT_TEXT=" >> $GITHUB_OUTPUT
+            echo "ALLOWED_TOOLS=Read,Write,Edit,Bash(git:*),mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*)" >> $GITHUB_OUTPUT
           fi
 
       - name: 'Run Claude Assistant Action'
         uses: anthropics/claude-code-action@v1
         with:
-          # This secret must be created in your repository's settings under:
-          # Settings > Secrets and variables > Actions > New repository secret
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-
-          # For automated workflows (PRs and issues), this prompt is used.
-          # It's dynamically set by the previous step.
-          prompt: ${{ steps.set_prompt.outputs.PROMPT_TEXT }}
-
-          # For PR reviews, use a single updating comment to keep the timeline clean.
-          use_sticky_comment: true
-
-          # For interactive use, trigger Claude by starting a comment with '@claude'.
+          prompt: ${{ steps.set_context.outputs.PROMPT_TEXT }}
           trigger_phrase: '@claude'
-          
-          # When an issue is assigned to this user, trigger the action to solve it.
-          # Change 'claude-bot' to the actual username of the bot you want to use.
           assignee_trigger: 'claude-bot'
-
-          # Pass advanced arguments to the Claude CLI.
           claude_args: |
-            # Use the specific model you requested.
             --model claude-4-0-sonnet-20250805
-            # This system prompt sets the context and persona for Claude's responses.
+            --allowedTools "${{ steps.set_context.outputs.ALLOWED_TOOLS }}"
             --system-prompt "Act as a principal software engineer with extensive experience in the full stack of AI systems. Your expertise covers low-level, on-device workload optimizations (e.g., CUDA, MLIR, kernels) as well as high-level concepts like Kubernetes, networking, and distributed clusters. Provide expert analysis, architectural guidance, and precise, optimized code."
-            # Set the maximum number of conversational turns.
             --max-turns 20
 
