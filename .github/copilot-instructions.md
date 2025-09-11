@@ -31,7 +31,7 @@
     * TODO comments or issue markers in the code.
 2.  Based on this analysis, update the `README.md` file to accurately reflect the current state:
     * Add or update a `Repository Structure` section with an ASCII tree representation of the directory structure.
-    * Update project status, features, and implementation details to match reality.
+    * Update features and implementation details to match reality.
     * Ensure all referenced files, directories, and documentation actually exist.
     * Update technology stack and dependencies based on actual files present.
     * Keep the existing tone and style of the README while ensuring accuracy.
