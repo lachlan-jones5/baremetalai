@@ -20,6 +20,23 @@
 
 ### Project Management
 
+#### @git/readme
+**Action**: Analyzes the entire repository and updates the `README.md` file to reflect the current state of the project.
+**Instructions**:
+1.  Perform a comprehensive analysis of the entire repository. This includes:
+    * The current file and directory structure.
+    * The contents of all source files, configuration files, and documentation.
+    * The project's actual implementation status versus what's described in the README.
+    * Any build systems, dependencies, or tooling present.
+    * TODO comments or issue markers in the code.
+2.  Based on this analysis, update the `README.md` file to accurately reflect the current state:
+    * Add or update a `Repository Structure` section with an ASCII tree representation of the directory structure.
+    * Update features and implementation details to match reality.
+    * Ensure all referenced files, directories, and documentation actually exist.
+    * Update technology stack and dependencies based on actual files present.
+    * Keep the existing tone and style of the README while ensuring accuracy.
+3.  Do NOT use git commands to analyze changes - instead manually review all files and directories to understand the current state.
+
 #### @copilot/update
 **Action**: Analyzes the entire repository and updates this `copilot-instructions.md` file to reflect the current state of the project.
 **Instructions**:
