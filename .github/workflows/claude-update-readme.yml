@@ -1,59 +1,49 @@
-# This GitHub Actions workflow is manually triggered to update the README.md
-# based on the changes in a specific pull request.
+# This workflow manually triggers Claude to update the main README.md file
+# based on the changes from a specified pull request.
 
 name: 'Claude: Update README'
 
-# This workflow is triggered manually from the Actions tab in GitHub.
-# It requires the user to input a pull request number.
 on:
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
       pull_request_number:
-        description: 'The number of the PR to analyze for README updates'
+        description: 'The number of the PR to use for the README update'
         required: true
-        type: string
 
-# Grant necessary permissions for the action.
-# 'contents: write' is needed to commit the updated README.
-# 'pull-requests: read' is needed to access the PR content.
-# 'id-token: write' is required for the action to authenticate with GitHub.
 permissions:
   contents: write
-  pull-requests: read
   id-token: write
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
     steps:
-      # This step is crucial. It checks out the code from the specific pull request branch,
-      # not the default branch, so Claude analyzes the correct set of changes.
-      - name: Checkout PR Branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: 'refs/pull/${{ github.event.inputs.pull_request_number }}/head'
-          # Fetch all history for a more accurate git log
-          fetch-depth: 0
+          # Ensure we have enough history for Claude to analyze changes.
+          fetch-depth: 0 
 
       - name: 'Run Claude to Update README'
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-
-          # This is the custom instruction for updating the README.
           prompt: |
-            Analyze the changes in this pull request (PR #${{ github.event.inputs.pull_request_number }}).
-            Based on these changes, please update the main `README.md` file.
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.inputs.pull_request_number }}
 
-            You must perform the following actions:
-            1.  Review all file and directory changes introduced in this PR.
-            2.  Locate the repository structure ASCII tree within `README.md`.
-            3.  Regenerate this ASCII tree to accurately reflect the current project structure. You can use a command like `tree -I "node_modules|dist|.git"` to assist.
-            4.  Update any other relevant sections of the `README.md` to describe new features, usage changes, or architectural modifications from this PR.
-            5.  Commit the updated `README.md` directly to this branch with a clear commit message.
+            Please analyze the changes from the pull request above and update the main README.md file accordingly.
+            
+            Specifically:
+            1. Reflect any changes to features, usage, or configuration.
+            2. Update the repository structure ASCII tree in the README to match the current state.
+            
+            Commit the updated README.md to the default branch.
 
-          # We use the same persona and model for consistency with your other workflow.
           claude_args: |
             --model claude-4-0-sonnet-20250805
+            --allowedTools "Read,Write,Edit,Bash(git:*)"
             --system-prompt "Act as a principal software engineer with extensive experience in the full stack of AI systems. Your expertise covers low-level, on-device workload optimizations (e.g., CUDA, MLIR, kernels) as well as high-level concepts like Kubernetes, networking, and distributed clusters. Provide expert analysis, architectural guidance, and precise, optimized code."
+            --max-turns 5
 
